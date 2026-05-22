@@ -4,8 +4,17 @@ let handler = async (m, { conn, text, command }) => {
   if (!text) return m.reply("مثال: .انمي Naruto");
   
   if (command === "انمي") {
+    // شرط منع الأحرف العربية وفحص اللغة الإنجليزية
+    if (!/^[A-Za-z0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(text)) {
+      return m.reply("🙃 سوري: البحث انحليزي فقط!\nExample: .انمي Naruto");
+    }
+
     const se = await Scrapy.Witanime({ query: text, choose: "search" })
     const results = se.data
+
+    // لو ما لقى نتائج
+    if (!results || results.length === 0) return m.reply("❌ لم يتم العثور على نتائج، تأكد من كتابة الاسم الصحيح.");
+    
 
     const sections = [{
       title: "📺 نتائج البحث",
